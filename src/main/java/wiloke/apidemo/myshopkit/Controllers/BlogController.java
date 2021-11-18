@@ -5,10 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import wiloke.apidemo.myshopkit.Models.BlogModel;
+import wiloke.apidemo.myshopkit.Models.DeleteRequest;
 import wiloke.apidemo.myshopkit.Models.MessageFactory;
 import wiloke.apidemo.myshopkit.Repositories.BlogRepositories;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -82,7 +85,7 @@ public class BlogController {
 
     //API one DELETE
     @DeleteMapping(path = "/{id}")
-    ResponseEntity<MessageFactory> multiDeleteBlog(@PathVariable Long id) {
+    ResponseEntity<MessageFactory> deleteBlog(@PathVariable Long id) {
         Optional<BlogModel> isBlogExist = BlogRepositories.findById(id);
         if (isBlogExist.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -92,6 +95,22 @@ public class BlogController {
         BlogRepositories.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new MessageFactory("success","the blogs deleted blogs successfully","")
+        );
+    }
+
+    //API Delete multi
+    @DeleteMapping
+    ResponseEntity <MessageFactory> deleteBlogs(@RequestBody DeleteRequest aData){
+        String[] aIds = aData.getIds().split(",");
+        for (String blogID: aIds) {
+            Long id = Long.parseLong(blogID);
+            Optional<BlogModel> isBlogExist = BlogRepositories.findById(id);
+            if (isBlogExist.isPresent()){
+                BlogRepositories.deleteById(id);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new MessageFactory("success","xx",aIds)
         );
     }
 }
