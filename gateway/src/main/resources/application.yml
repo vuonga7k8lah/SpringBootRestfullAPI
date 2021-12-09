@@ -1,0 +1,16 @@
+#server:
+#  port: 9003
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka
+#
+#spring:
+#  application:
+#    name: gateway-service
+#zuul:
+#  routes:
+#    myshopkit-service:
+#      path: /demo/**
+#      serviceId: myshopkit-service
